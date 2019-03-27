@@ -1,25 +1,44 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import DataFetch from './Component/DataFetch.js'
+import { Card, CardImg, CardText, CardBody,
+  CardTitle, CardSubtitle, Button } from 'reactstrap';
 
 class App extends Component {
-  render() {
+  
+  constructor(){
+    super()
+    this.state={
+      pictures:[],
+    }
+  }
+  
+  componentDidMount(){
+    window.fetch('https://randomuser.me/api/')
+    .then(results=>{return results.json()})
+    .then(data=>{let pictures=data.results.map((pic)=>{
+        return(
+            <div className="row justify-content-center"><div className="col-4"><Card>
+        <CardImg width="50%" src={pic.picture.large}/>
+        <CardBody>
+          <CardTitle><b>{`${pic.name.first} ${pic.name.last}`}</b></CardTitle>
+          <CardSubtitle>{pic.email}</CardSubtitle>
+        </CardBody>
+      </Card></div></div>
+            )
+    }
+    
+    )
+    this.setState({pictures:pictures})
+    })
+   
+    
+  }
+  
+  render() 
+  {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {this.state.pictures}
       </div>
     );
   }
